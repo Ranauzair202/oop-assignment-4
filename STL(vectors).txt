@@ -1,0 +1,79 @@
+#include <iostream>
+
+using namespace std;
+
+const int MAX_PRODUCTS = 100;
+
+struct Product {
+    int id;
+    string name;
+    double price;
+};
+
+class Inventory {
+private:
+    Product products[MAX_PRODUCTS];
+    int numProducts;
+
+public:
+    Inventory() : numProducts(0) {}
+
+    void addProduct(const Product& newProduct) {
+        if (numProducts < MAX_PRODUCTS) {
+            products[numProducts++] = newProduct;
+            cout << "Product added to the inventory." << endl;
+        } else {
+            cout << "Inventory is full. Cannot add more products." << endl;
+        }
+    }
+
+    void removeProduct(int productId) {
+        int index = findProductIndex(productId);
+
+        if (index != -1) {
+            for (int i = index; i < numProducts - 1; ++i) {
+                products[i] = products[i + 1];
+            }
+            --numProducts;
+            cout << "Product with ID " << productId << " removed from the inventory." << endl;
+        } else {
+            cout << "Product with ID " << productId << " not found in the inventory." << endl;
+        }
+    }
+
+    void displayInventory() const {
+        cout << "\nCurrent Inventory:\n";
+        for (int i = 0; i < numProducts; ++i) {
+            cout << "ID: " << products[i].id << ", Name: " << products[i].name
+                 << ", Price: $" << products[i].price << endl;
+        }
+    }
+
+private:
+    int findProductIndex(int productId) const {
+        for (int i = 0; i < numProducts; ++i) {
+            if (products[i].id == productId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
+
+int main() {
+    Inventory inventory;
+
+    Product laptop{1, "Laptop", 999.99};
+    Product smartphone{2, "Smartphone", 599.99};
+
+    inventory.addProduct(laptop);
+    inventory.addProduct(smartphone);
+
+    inventory.displayInventory();
+
+    inventory.removeProduct(1);
+
+    inventory.displayInventory();
+
+    return 0;
+}
